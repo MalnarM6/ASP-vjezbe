@@ -1,0 +1,128 @@
+#include<stdio.h>
+#include<math.h>
+#include<string.h>
+
+#define MAX 20
+#define M_PI 3.14159265358979323846
+
+typedef struct 
+{
+    float radijus;
+    float povrsina;
+    char boja[11];
+    int kolicina;
+}Krug ;
+
+typedef struct
+{
+    int iZadnji;
+    Krug elementi[MAX];
+}Lista;
+
+//voidi ubaci ispis obrisi izmjeni i pronadjiboju
+void upisKruga(Krug* pkrug);
+void ubaci(Krug noviElement, int iUbaci, Lista* plista);
+void ispis(Lista* plista);
+void pronadjiBoju(Lista* plista);
+void izmijeni(int iIzmijeni, Lista* plista);
+
+
+
+int main()
+{
+    Krug krug;
+
+    Lista lista;
+    lista.iZadnji=-1;
+    int i, iBoja;
+    char odgovor;
+    do{
+
+        printf("\n\n\nUnos podataka\n");
+        upisKruga(&krug);
+        printf("Zelite li unijeti podatke za jos jedan krug?");
+        scanf("%c", &odgovor, 1);
+
+    }while (odgovor!='n');
+
+
+
+    return 0;
+}
+
+void upisKruga(Krug* pkrug)
+{
+
+    printf("Unesite radijus kruga: \n");
+    scanf("%f", &pkrug->radijus);
+    pkrug->povrsina = pow(pkrug->radijus, 2) * M_PI;
+
+    printf("Unesite boju kruga: \n");
+    scanf("%10s", pkrug->boja, 11);
+    printf("Unesite kolicinu krugova: \n");
+    scanf("%d", &pkrug->kolicina);
+}
+
+
+void ubaci(Krug noviElement, int iUbaci, Lista *plista)
+{
+    int i;
+    if(plista->iZadnji >= MAX-1)
+        printf("Lista je puna!");
+    else if ((iUbaci>plista->iZadnji+1) || (iUbaci<0))
+        printf("Pozicija ne postoji");
+    else{
+        for(i=plista->iZadnji; i>=iUbaci; i--)
+            plista->elementi[i+1]=plista->elementi[i];
+            plista->iZadnji++;
+            plista->elementi[iUbaci]=noviElement;
+    }
+
+}
+
+void ispis(Lista* plista)
+{
+    int i;
+    printf("\n\nIspis liste: ");
+    for(i=0; i<=plista->iZadnji; i++)
+    {
+        printf("Radijus kruga je %.2f \n", plista->elementi[i].radijus);
+        printf("Povrsina kruga je %.2f \n", plista->elementi[i].povrsina);
+        printf("Boja kruga je %s \n", plista->elementi[i].boja);
+        printf("Kolicina krugova je: %d \n", plista->elementi[i].kolicina);
+
+    }
+}
+
+void pronadjiBoju(Lista* plista)
+{
+    int i;
+    char bojaK[11];
+
+    printf("\n\nUnesite boju kruga koji zelite pronaci");
+    scanf("%10s", bojaK, 11);
+
+    for(i=0; i<=plista->iZadnji; i++)
+    {
+        if(strcmp(plista->elementi[i].boja, bojaK) == 0)
+        {
+            return i;
+        }
+    }
+    return -1;
+
+}
+
+void izmijeni(int iIzmijeni, Lista* plista)
+{
+    Krug krug;
+
+    upisKrug(&krug);
+    plista->elementi[iIzmijeni].radijus=krug.radijus;
+    plista->elementi[iIzmijeni].povrsina=krug.povrsina;
+    strcpy_s((plista->elementi[iIzmijeni].boja)),
+    sizeof((plista->elementi[iIzmijeni].boja), krug.boja);
+    plista->elementi[iIzmijeni].kolicina=krug.kolicina;
+}
+
+
